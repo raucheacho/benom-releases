@@ -1,0 +1,236 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Benom pour Mac</title>
+<meta name="description" content="Benom, un assistant vocal pour Mac qui t'écoute et te répond, en français et en anglais. Ta voix reste sur ton Mac.">
+<link rel="icon" type="image/png" href="favicon.png">
+<style>
+:root {
+  --bg: #f6f5fb;
+  --surface: #ffffff;
+  --text: #17162a;
+  --muted: #5d5b74;
+  --line: rgba(23, 22, 42, 0.09);
+  --accent: #4f46e5;
+  --accent-2: #a23ce6;
+  --accent-text: #ffffff;
+  --glow: rgba(99, 76, 240, 0.18);
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #0d0c17;
+    --surface: #17162a;
+    --text: #f1f0fa;
+    --muted: #a3a1bd;
+    --line: rgba(241, 240, 250, 0.09);
+    --accent: #6d64ff;
+    --accent-2: #b45cf0;
+    --glow: rgba(109, 100, 255, 0.28);
+  }
+}
+* { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; }
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  font: 17px/1.55 -apple-system, BlinkMacSystemFont, "SF Pro Text", "Helvetica Neue", Arial, sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+a { color: inherit; }
+.wrap { max-width: 980px; margin: 0 auto; padding: 0 20px; }
+
+/* En-tête */
+header { display: flex; justify-content: space-between; align-items: center; padding: 18px 0; }
+.brand { display: flex; align-items: center; gap: 10px; font-weight: 600; text-decoration: none; }
+.brand img { width: 28px; height: 28px; }
+.lang { display: flex; gap: 2px; padding: 3px; border: 1px solid var(--line); border-radius: 999px; background: var(--surface); }
+.lang button {
+  border: 0; background: none; color: var(--muted); font: inherit; font-size: 13px; font-weight: 600;
+  padding: 4px 11px; border-radius: 999px; cursor: pointer;
+}
+.lang button[aria-pressed="true"] { background: var(--text); color: var(--bg); }
+
+/* Accroche */
+.hero { position: relative; text-align: center; padding: 56px 0 72px; }
+.hero::before {
+  content: ""; position: absolute; inset: -40px 0 auto; height: 420px; z-index: -1;
+  background: radial-gradient(closest-side, var(--glow), transparent 75%);
+}
+.hero img { width: 128px; height: 128px; filter: drop-shadow(0 18px 30px var(--glow)); }
+h1 { font-size: clamp(40px, 7vw, 64px); line-height: 1.05; letter-spacing: -0.03em; margin: 22px 0 14px; }
+.tagline { font-size: clamp(18px, 2.4vw, 22px); color: var(--muted); max-width: 620px; margin: 0 auto 34px; }
+.cta {
+  display: inline-flex; align-items: center; gap: 10px; text-decoration: none;
+  background: linear-gradient(135deg, var(--accent), var(--accent-2)); color: var(--accent-text);
+  font-weight: 600; font-size: 18px; padding: 15px 30px; border-radius: 14px;
+  box-shadow: 0 10px 30px var(--glow); transition: transform .15s ease, box-shadow .15s ease;
+}
+.cta:hover { transform: translateY(-1px); box-shadow: 0 14px 36px var(--glow); }
+.cta:focus-visible, .lang button:focus-visible { outline: 3px solid var(--accent); outline-offset: 3px; }
+.cta svg { width: 20px; height: 20px; }
+.meta { margin-top: 16px; font-size: 14px; color: var(--muted); }
+.meta a { color: var(--muted); }
+
+/* Sections */
+section { padding: 28px 0 44px; }
+h2 { font-size: 28px; letter-spacing: -0.02em; margin: 0 0 22px; }
+.grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; }
+.card { background: var(--surface); border: 1px solid var(--line); border-radius: 16px; padding: 22px; }
+.card h3 { font-size: 17px; margin: 12px 0 6px; }
+.card p { margin: 0; color: var(--muted); font-size: 15px; }
+.icon {
+  width: 38px; height: 38px; border-radius: 10px; display: grid; place-items: center;
+  background: linear-gradient(135deg, var(--accent), var(--accent-2)); color: #fff;
+}
+.icon svg { width: 20px; height: 20px; }
+
+.steps { counter-reset: step; display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; padding: 0; margin: 0; list-style: none; }
+.steps li { counter-increment: step; background: var(--surface); border: 1px solid var(--line); border-radius: 16px; padding: 22px; }
+.steps li::before {
+  content: counter(step); display: grid; place-items: center; width: 30px; height: 30px; border-radius: 50%;
+  border: 1.5px solid var(--accent); color: var(--accent); font-weight: 700; font-size: 14px; margin-bottom: 12px;
+}
+.steps strong { display: block; margin-bottom: 4px; }
+.steps span { color: var(--muted); font-size: 15px; }
+
+.reqs { background: var(--surface); border: 1px solid var(--line); border-radius: 16px; padding: 6px 22px; }
+.reqs div { display: flex; justify-content: space-between; gap: 20px; padding: 14px 0; border-bottom: 1px solid var(--line); }
+.reqs div:last-child { border-bottom: 0; }
+.reqs dt { font-weight: 600; }
+.reqs dd { margin: 0; color: var(--muted); text-align: right; }
+
+footer { padding: 30px 0 46px; color: var(--muted); font-size: 14px; display: flex; justify-content: space-between; gap: 16px; flex-wrap: wrap; border-top: 1px solid var(--line); margin-top: 20px; }
+footer a { color: var(--muted); }
+
+[data-lang] { display: none; }
+html[lang="fr"] [data-lang="fr"], html[lang="en"] [data-lang="en"] { display: revert; }
+
+@media (max-width: 760px) {
+  .grid, .steps { grid-template-columns: 1fr; }
+  .hero { padding: 36px 0 52px; }
+  .reqs div { flex-direction: column; gap: 2px; }
+  .reqs dd { text-align: left; }
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <a class="brand" href="#"><img src="favicon.png" alt="">Benom</a>
+    <div class="lang" role="group" aria-label="Langue · Language">
+      <button type="button" data-set="fr">FR</button>
+      <button type="button" data-set="en">EN</button>
+    </div>
+  </header>
+
+  <main>
+    <div class="hero">
+      <img src="icon.png" alt="Benom">
+      <h1>Benom</h1>
+      <p class="tagline">
+        <span data-lang="fr">Un assistant vocal pour ton Mac. Tu lui parles, il te répond, en français ou en anglais. Ta voix reste sur ton Mac.</span>
+        <span data-lang="en">A voice assistant for your Mac. You talk, it answers, in English or French. Your voice stays on your Mac.</span>
+      </p>
+      <a class="cta" href="https://github.com/raucheacho/benom-releases/releases/latest/download/Benom.dmg">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 4v11m0 0-4.5-4.5M12 15l4.5-4.5M5 19.5h14"/></svg>
+        <span data-lang="fr">Télécharger pour Mac</span>
+        <span data-lang="en">Download for Mac</span>
+      </a>
+      <p class="meta">
+        <span data-lang="fr">Version <span class="version">1.0.0</span> · Mac Apple Silicon · macOS 14 ou plus récent · <a href="https://github.com/raucheacho/benom-releases/releases">Toutes les versions</a></span>
+        <span data-lang="en">Version <span class="version">1.0.0</span> · Apple Silicon Mac · macOS 14 or later · <a href="https://github.com/raucheacho/benom-releases/releases">All versions</a></span>
+      </p>
+    </div>
+
+    <section>
+      <h2><span data-lang="fr">Ce que fait Benom</span><span data-lang="en">What Benom does</span></h2>
+      <div class="grid">
+        <div class="card">
+          <div class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M12 3a3 3 0 0 0-3 3v6a3 3 0 0 0 6 0V6a3 3 0 0 0-3-3Z"/><path d="M19 11a7 7 0 0 1-14 0M12 18v3"/></svg></div>
+          <h3><span data-lang="fr">Une vraie conversation</span><span data-lang="en">A real conversation</span></h3>
+          <p><span data-lang="fr">Parle naturellement, coupe-lui la parole, enchaîne les questions. Pas de mot magique, pas de bouton à tenir.</span><span data-lang="en">Speak naturally, interrupt it, ask follow-ups. No wake word, no button to hold.</span></p>
+        </div>
+        <div class="card">
+          <div class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="11" width="16" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg></div>
+          <h3><span data-lang="fr">Ta voix reste chez toi</span><span data-lang="en">Your voice stays home</span></h3>
+          <p><span data-lang="fr">L'écoute et la voix tournent sur ton Mac. Seul le texte part vers le modèle que tu choisis, local ou en ligne.</span><span data-lang="en">Listening and speech run on your Mac. Only text goes to the model you pick, local or online.</span></p>
+        </div>
+        <div class="card">
+          <div class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="13" r="8"/><path d="M12 9v4l2.5 2.5M9 2h6"/></svg></div>
+          <h3><span data-lang="fr">Rappels et agenda</span><span data-lang="en">Reminders and agenda</span></h3>
+          <p><span data-lang="fr">« Rappelle-moi tous les lundis à 9 h. » Benom te le dit au bon moment, ou attend ton retour si tu n'es pas là.</span><span data-lang="en">“Remind me every Monday at 9.” Benom tells you at the right time, or waits until you're back.</span></p>
+        </div>
+        <div class="card">
+          <div class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 18a5 5 0 1 1 .9-9.9A6 6 0 0 1 19 10a4 4 0 0 1-1 7.9H7Z"/></svg></div>
+          <h3><span data-lang="fr">Météo et recherche web</span><span data-lang="en">Weather and web search</span></h3>
+          <p><span data-lang="fr">La météo de ta ville ou d'ailleurs, et des réponses à jour depuis le web (avec une clé Tavily, gratuite).</span><span data-lang="en">Weather for your city or anywhere, and up-to-date answers from the web (with a free Tavily key).</span></p>
+        </div>
+        <div class="card">
+          <div class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5" y="3" width="14" height="18" rx="2"/><path d="M9 7h6M9 12h.01M12 12h.01M15 12h.01M9 16h.01M12 16h.01M15 16h.01"/></svg></div>
+          <h3><span data-lang="fr">Calculs et conversions</span><span data-lang="en">Math and conversions</span></h3>
+          <p><span data-lang="fr">Calculs, unités, devises au cours du jour : des résultats exacts, pas des approximations.</span><span data-lang="en">Math, units, currencies at today's rate: exact results, not guesses.</span></p>
+        </div>
+        <div class="card">
+          <div class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v3M12 18v3M4.2 7.5l2.6 1.5M17.2 15l2.6 1.5M4.2 16.5l2.6-1.5M17.2 9l2.6-1.5"/><circle cx="12" cy="12" r="3.5"/></svg></div>
+          <h3><span data-lang="fr">Le cerveau de ton choix</span><span data-lang="en">The brain you choose</span></h3>
+          <p><span data-lang="fr">Ollama sur ton Mac, ou un service en ligne comme Groq, OpenRouter, Mistral ou OpenAI.</span><span data-lang="en">Ollama on your Mac, or an online service like Groq, OpenRouter, Mistral or OpenAI.</span></p>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <h2><span data-lang="fr">Installer en trois étapes</span><span data-lang="en">Install in three steps</span></h2>
+      <ol class="steps">
+        <li><strong><span data-lang="fr">Télécharge</span><span data-lang="en">Download</span></strong><span><span data-lang="fr">Ouvre le fichier Benom.dmg.</span><span data-lang="en">Open the Benom.dmg file.</span></span></li>
+        <li><strong><span data-lang="fr">Glisse</span><span data-lang="en">Drag</span></strong><span><span data-lang="fr">Dépose Benom dans le dossier Applications.</span><span data-lang="en">Drop Benom into your Applications folder.</span></span></li>
+        <li><strong><span data-lang="fr">Lance</span><span data-lang="en">Launch</span></strong><span><span data-lang="fr">L'assistant installe le reste et t'aide à choisir ton modèle. Les mises à jour te sont ensuite proposées automatiquement.</span><span data-lang="en">The setup assistant installs the rest and helps you pick a model. Updates are then offered automatically.</span></span></li>
+      </ol>
+    </section>
+
+    <section>
+      <h2><span data-lang="fr">Ce qu'il te faut</span><span data-lang="en">What you need</span></h2>
+      <dl class="reqs">
+        <div><dt><span data-lang="fr">Mac</span><span data-lang="en">Mac</span></dt><dd><span data-lang="fr">Puce Apple (M1 ou plus récent). Les Mac Intel ne sont pas pris en charge.</span><span data-lang="en">Apple chip (M1 or later). Intel Macs are not supported.</span></dd></div>
+        <div><dt>macOS</dt><dd><span data-lang="fr">14 Sonoma ou plus récent</span><span data-lang="en">14 Sonoma or later</span></dd></div>
+        <div><dt><span data-lang="fr">Espace disque</span><span data-lang="en">Disk space</span></dt><dd><span data-lang="fr">Environ 4 Go, téléchargés au premier lancement</span><span data-lang="en">About 4 GB, downloaded on first launch</span></dd></div>
+        <div><dt><span data-lang="fr">Modèle de langage</span><span data-lang="en">Language model</span></dt><dd><span data-lang="fr"><a href="https://ollama.com">Ollama</a> installé, ou une clé d'un service en ligne</span><span data-lang="en"><a href="https://ollama.com">Ollama</a> installed, or a key for an online service</span></dd></div>
+      </dl>
+    </section>
+  </main>
+
+  <footer>
+    <span>© 2026 Rauche Acho</span>
+    <span><a href="https://github.com/raucheacho/benom-releases/releases"><span data-lang="fr">Notes de version</span><span data-lang="en">Release notes</span></a></span>
+  </footer>
+</div>
+<script>
+(function () {
+  var root = document.documentElement;
+  function set(lang) {
+    root.lang = lang;
+    document.querySelectorAll(".lang button").forEach(function (b) {
+      b.setAttribute("aria-pressed", String(b.dataset.set === lang));
+    });
+    try { localStorage.setItem("lang", lang); } catch (e) {}
+  }
+  var saved = null;
+  try { saved = localStorage.getItem("lang"); } catch (e) {}
+  set(saved || ((navigator.language || "en").toLowerCase().indexOf("fr") === 0 ? "fr" : "en"));
+  // La dernière version publiée (sans elle, la version écrite dans la page).
+  fetch("https://api.github.com/repos/raucheacho/benom-releases/releases/latest")
+    .then(function (r) { return r.ok ? r.json() : null; })
+    .then(function (rel) {
+      if (!rel || !rel.tag_name) return;
+      document.querySelectorAll(".version").forEach(function (e) { e.textContent = rel.tag_name.replace(/^v/, ""); });
+    })
+    .catch(function () {});
+  document.querySelectorAll(".lang button").forEach(function (b) {
+    b.addEventListener("click", function () { set(b.dataset.set); });
+  });
+})();
+</script>
+</body>
+</html>
