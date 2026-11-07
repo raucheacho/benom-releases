@@ -4,204 +4,453 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Benom pour Mac</title>
-<meta name="description" content="Benom, un assistant vocal pour Mac qui t'écoute et te répond, en français et en anglais. Ta voix reste sur ton Mac.">
+<meta name="description" content="Benom, un assistant vocal pour Mac. Tu lui parles, il te répond, en français et en anglais. Ta voix reste sur ton Mac.">
+<meta name="color-scheme" content="dark">
 <link rel="icon" type="image/png" href="favicon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
 :root {
-  --bg: #f6f5fb;
-  --surface: #ffffff;
-  --text: #17162a;
-  --muted: #5d5b74;
-  --line: rgba(23, 22, 42, 0.09);
-  --accent: #4f46e5;
-  --accent-hover: #4338ca;
-  --accent-text: #ffffff;
-  --tint: rgba(79, 70, 229, 0.09);
-}
-@media (prefers-color-scheme: dark) {
-  :root {
-    --bg: #0d0c17;
-    --surface: #17162a;
-    --text: #f1f0fa;
-    --muted: #a3a1bd;
-    --line: rgba(241, 240, 250, 0.09);
-    --accent: #6d64ff;
-    --accent-hover: #8079ff;
-    --tint: rgba(109, 100, 255, 0.14);
-  }
+  --bg: #07070a;
+  --surface: #0e0e13;
+  --surface-2: #15151c;
+  --line: rgba(255, 255, 255, 0.08);
+  --line-strong: rgba(255, 255, 255, 0.14);
+  --text: #f4f4f6;
+  --muted: #8d8d99;
+  --dim: #5d5d68;
+  --accent: #8b7bff;
+  --mono: "JetBrains Mono", ui-monospace, "SF Mono", Menlo, monospace;
 }
 * { box-sizing: border-box; }
-html { -webkit-text-size-adjust: 100%; }
+html { -webkit-text-size-adjust: 100%; scroll-behavior: smooth; }
 body {
-  margin: 0;
-  background: var(--bg);
-  color: var(--text);
-  font: 17px/1.55 -apple-system, BlinkMacSystemFont, "SF Pro Text", "Helvetica Neue", Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
+  margin: 0; background: var(--bg); color: var(--text);
+  font: 16px/1.55 Inter, -apple-system, BlinkMacSystemFont, "Helvetica Neue", Arial, sans-serif;
+  -webkit-font-smoothing: antialiased; overflow-x: hidden;
 }
-a { color: inherit; }
-.wrap { max-width: 980px; margin: 0 auto; padding: 0 20px; }
-
-/* En-tête */
-header { display: flex; justify-content: space-between; align-items: center; padding: 18px 0; }
-.brand { display: flex; align-items: center; gap: 10px; font-weight: 600; text-decoration: none; }
-.brand img { width: 28px; height: 28px; }
-.lang { display: flex; gap: 2px; padding: 3px; border: 1px solid var(--line); border-radius: 999px; background: var(--surface); }
-.lang button {
-  border: 0; background: none; color: var(--muted); font: inherit; font-size: 13px; font-weight: 600;
-  padding: 4px 11px; border-radius: 999px; cursor: pointer;
-}
-.lang button[aria-pressed="true"] { background: var(--text); color: var(--bg); }
-
-/* Accroche */
-.hero { text-align: center; padding: 56px 0 72px; }
-.hero img { width: 128px; height: 128px; }
-h1 { font-size: clamp(40px, 7vw, 64px); line-height: 1.05; letter-spacing: -0.03em; margin: 22px 0 14px; }
-.tagline { font-size: clamp(18px, 2.4vw, 22px); color: var(--muted); max-width: 620px; margin: 0 auto 34px; }
-.cta {
-  display: inline-flex; align-items: center; gap: 10px; text-decoration: none;
-  background: var(--accent); color: var(--accent-text);
-  font-weight: 600; font-size: 18px; padding: 15px 30px; border-radius: 12px;
-  transition: background .15s ease;
-}
-.cta:hover { background: var(--accent-hover); }
-.cta:focus-visible, .lang button:focus-visible { outline: 3px solid var(--accent); outline-offset: 3px; }
-.cta svg { width: 20px; height: 20px; }
-.meta { margin-top: 16px; font-size: 14px; color: var(--muted); }
-.meta a { color: var(--muted); }
-
-/* Sections */
-section { padding: 28px 0 44px; }
-h2 { font-size: 28px; letter-spacing: -0.02em; margin: 0 0 22px; }
-.grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; }
-.card { background: var(--surface); border: 1px solid var(--line); border-radius: 16px; padding: 22px; }
-.card h3 { font-size: 17px; margin: 12px 0 6px; }
-.card p { margin: 0; color: var(--muted); font-size: 15px; }
-.icon {
-  width: 38px; height: 38px; border-radius: 10px; display: grid; place-items: center;
-  background: var(--tint); color: var(--accent);
-}
-.icon svg { width: 20px; height: 20px; }
-
-.steps { counter-reset: step; display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; padding: 0; margin: 0; list-style: none; }
-.steps li { counter-increment: step; background: var(--surface); border: 1px solid var(--line); border-radius: 16px; padding: 22px; }
-.steps li::before {
-  content: counter(step); display: grid; place-items: center; width: 30px; height: 30px; border-radius: 50%;
-  border: 1.5px solid var(--accent); color: var(--accent); font-weight: 700; font-size: 14px; margin-bottom: 12px;
-}
-.steps strong { display: block; margin-bottom: 4px; }
-.steps span { color: var(--muted); font-size: 15px; }
-
-.reqs { background: var(--surface); border: 1px solid var(--line); border-radius: 16px; padding: 6px 22px; }
-.reqs div { display: flex; justify-content: space-between; gap: 20px; padding: 14px 0; border-bottom: 1px solid var(--line); }
-.reqs div:last-child { border-bottom: 0; }
-.reqs dt { font-weight: 600; }
-.reqs dd { margin: 0; color: var(--muted); text-align: right; }
-
-footer { padding: 30px 0 46px; color: var(--muted); font-size: 14px; display: flex; justify-content: space-between; gap: 16px; flex-wrap: wrap; border-top: 1px solid var(--line); margin-top: 20px; }
-footer a { color: var(--muted); }
+a { color: inherit; text-decoration: none; }
+img { display: block; }
+.wrap { max-width: 1120px; margin: 0 auto; padding: 0 24px; }
 
 [data-lang] { display: none; }
 html[lang="fr"] [data-lang="fr"], html[lang="en"] [data-lang="en"] { display: revert; }
 
-@media (max-width: 760px) {
-  .grid, .steps { grid-template-columns: 1fr; }
-  .hero { padding: 36px 0 52px; }
-  .reqs div { flex-direction: column; gap: 2px; }
-  .reqs dd { text-align: left; }
+/* Navigation */
+nav { position: sticky; top: 0; z-index: 10; background: rgba(7, 7, 10, 0.72); backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px); border-bottom: 1px solid var(--line); }
+nav .wrap { display: flex; align-items: center; gap: 28px; height: 60px; }
+.brand { display: flex; align-items: center; gap: 9px; font-weight: 600; font-size: 15px; }
+.brand img { width: 24px; height: 24px; }
+.links { display: flex; gap: 22px; font-size: 14px; color: var(--muted); }
+.links a:hover { color: var(--text); }
+.spacer { flex: 1; }
+.lang { display: flex; font-family: var(--mono); font-size: 12px; border: 1px solid var(--line); border-radius: 8px; overflow: hidden; }
+.lang button { background: none; border: 0; color: var(--dim); font: inherit; padding: 5px 9px; cursor: pointer; }
+.lang button[aria-pressed="true"] { color: var(--text); background: var(--surface-2); }
+.btn {
+  display: inline-flex; align-items: center; gap: 8px; border-radius: 10px; font-weight: 600; font-size: 14px;
+  background: var(--text); color: #0a0a0d; padding: 9px 16px; transition: background .15s ease;
+}
+.btn:hover { background: #ffffff; }
+.btn svg { width: 16px; height: 16px; }
+.btn.lg { font-size: 16px; padding: 13px 22px; border-radius: 12px; }
+.btn:focus-visible, .lang button:focus-visible, .links a:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
+
+/* Accroche */
+.hero { text-align: center; padding: 104px 0 0; }
+.eyebrow { font-family: var(--mono); font-size: 12px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--accent); margin: 0 0 18px; }
+h1 { font-size: clamp(44px, 7.4vw, 84px); line-height: 1.02; letter-spacing: -0.035em; font-weight: 700; margin: 0; }
+h1 .dim { color: var(--dim); }
+.lede { color: var(--muted); font-size: clamp(17px, 2vw, 19px); max-width: 560px; margin: 24px auto 34px; }
+.hero .meta { font-family: var(--mono); font-size: 12px; color: var(--dim); margin-top: 16px; }
+
+/* Maquette : le bureau, la barre des menus, la conversation, la bulle */
+.stage { position: relative; margin: 72px auto 0; max-width: 980px; }
+.stage::before {
+  content: ""; position: absolute; left: 10%; right: 10%; top: 18%; bottom: -8%; z-index: -1;
+  background: radial-gradient(closest-side, rgba(139, 123, 255, 0.22), transparent); filter: blur(30px);
+}
+.desktop {
+  position: relative; height: 520px; border-radius: 18px; border: 1px solid var(--line-strong); overflow: hidden;
+  background: #0b0b10 radial-gradient(120% 90% at 80% 100%, #17142b 0%, #0b0b10 60%);
+  box-shadow: 0 40px 120px rgba(0, 0, 0, 0.6), inset 0 1px 0 rgba(255, 255, 255, 0.05);
+  text-align: left;
+}
+.menubar {
+  display: flex; align-items: center; justify-content: flex-end; gap: 18px; height: 30px; padding: 0 14px;
+  background: rgba(255, 255, 255, 0.04); border-bottom: 1px solid var(--line); font-size: 12.5px; color: #d9d9e0;
+}
+.menubar .left { margin-right: auto; display: flex; gap: 18px; color: #c9c9d2; }
+.menubar .left b { font-weight: 600; color: #ececf1; }
+.menubar .mb-icon { width: 16px; height: 16px; filter: invert(1); opacity: 0.95; }
+.menubar .mb-on { padding: 2px 6px; border-radius: 5px; background: rgba(255, 255, 255, 0.14); }
+.menu {
+  position: absolute; top: 36px; right: 66px; width: 286px; padding: 5px; border-radius: 10px; font-size: 13px;
+  background: rgba(32, 32, 40, 0.92); border: 1px solid var(--line-strong); box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+}
+.menu div { display: flex; justify-content: space-between; padding: 4px 9px; border-radius: 5px; color: #e6e6ec; }
+.menu .info { color: #8e8e9a; }
+.menu .hl { background: #5b50e0; color: #fff; }
+.menu .hl kbd { color: rgba(255, 255, 255, 0.85); }
+.menu kbd { font: inherit; color: #8e8e9a; }
+.menu hr { border: 0; border-top: 1px solid var(--line); margin: 5px 9px; }
+
+.chat { position: absolute; left: 44px; bottom: 44px; width: min(470px, calc(100% - 88px)); display: flex; flex-direction: column; gap: 12px; }
+.msg { max-width: 88%; padding: 11px 15px; border-radius: 16px; font-size: 14.5px; line-height: 1.45; }
+.msg.you { align-self: flex-end; background: var(--surface-2); border: 1px solid var(--line); border-bottom-right-radius: 5px; color: #e9e9ee; }
+.msg.tali { align-self: flex-start; background: rgba(139, 123, 255, 0.12); border: 1px solid rgba(139, 123, 255, 0.25); border-bottom-left-radius: 5px; }
+.who { font-family: var(--mono); font-size: 11px; color: var(--dim); margin-bottom: 3px; }
+.listening { display: flex; align-items: center; gap: 10px; font-family: var(--mono); font-size: 11.5px; color: var(--muted); padding-left: 2px; }
+.bars { display: flex; gap: 3px; align-items: center; height: 14px; }
+.bars i { width: 3px; border-radius: 2px; background: var(--accent); height: 4px; animation: wave 1.1s ease-in-out infinite; }
+.bars i:nth-child(2) { animation-delay: .15s; } .bars i:nth-child(3) { animation-delay: .3s; }
+.bars i:nth-child(4) { animation-delay: .45s; } .bars i:nth-child(5) { animation-delay: .6s; }
+@keyframes wave { 0%, 100% { height: 4px; } 50% { height: 14px; } }
+.orb { position: absolute; right: 52px; bottom: 40px; width: 128px; height: auto; filter: drop-shadow(0 18px 40px rgba(86, 70, 240, 0.45)); animation: float 6s ease-in-out infinite; }
+@keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-6px); } }
+@media (prefers-reduced-motion: reduce) { .bars i, .orb { animation: none; } .bars i { height: 9px; } }
+
+/* Sections */
+section.wrap { margin-top: 140px; }
+.head { max-width: 640px; margin-bottom: 44px; }
+h2 { font-size: clamp(26px, 3.4vw, 36px); line-height: 1.15; letter-spacing: -0.025em; font-weight: 600; margin: 0; }
+h2 .dim { color: var(--dim); display: block; }
+
+/* Grille de fonctions */
+.bento { display: grid; grid-template-columns: repeat(6, 1fr); gap: 14px; }
+.card {
+  position: relative; background: var(--surface); border: 1px solid var(--line); border-radius: 18px; padding: 26px; overflow: hidden;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.04); display: flex; flex-direction: column;
+}
+.span-2 { grid-column: span 2; } .span-4 { grid-column: span 4; } .span-6 { grid-column: span 6; }
+.card h3 { font-size: 16px; font-weight: 600; margin: 0 0 6px; display: flex; align-items: center; gap: 9px; }
+.card h3 svg { width: 17px; height: 17px; color: var(--muted); flex: none; }
+.card p { margin: 0; color: var(--muted); font-size: 14.5px; }
+.card .visual { flex: 1; min-height: 150px; display: flex; align-items: center; justify-content: center; margin-bottom: 26px; }
+
+/* Visuel : confidentialité */
+.flow { display: flex; align-items: center; gap: 14px; width: 100%; max-width: 560px; }
+.box { border: 1px solid var(--line-strong); border-radius: 14px; padding: 14px 16px; background: var(--surface-2); }
+.box .label { font-family: var(--mono); font-size: 11px; color: var(--dim); margin-bottom: 8px; text-transform: uppercase; letter-spacing: 0.06em; }
+.mac { flex: 1.3; }
+.chips { display: flex; flex-wrap: wrap; gap: 6px; }
+.chip { font-size: 12.5px; padding: 4px 9px; border-radius: 7px; background: rgba(255, 255, 255, 0.05); border: 1px solid var(--line); color: #d6d6de; }
+.chip.on { border-color: rgba(139, 123, 255, 0.4); color: #fff; background: rgba(139, 123, 255, 0.12); }
+.arrow { flex: 0.9; text-align: center; font-family: var(--mono); font-size: 11px; color: var(--muted); }
+.arrow .line { height: 1px; background: var(--accent); opacity: 0.7; margin: 8px 0; position: relative; }
+.arrow .line::after { content: ""; position: absolute; right: -1px; top: -3px; border: 3.5px solid transparent; border-left: 6px solid var(--accent); }
+.model { flex: 1; }
+
+/* Visuel : touches */
+.keys { display: flex; align-items: center; gap: 10px; color: var(--dim); font-size: 18px; }
+.key {
+  width: 74px; height: 74px; border-radius: 12px; border: 1px solid var(--line-strong); background: #16161d;
+  box-shadow: 0 4px 0 #0a0a0e, inset 0 1px 0 rgba(255, 255, 255, 0.07);
+  display: flex; flex-direction: column; justify-content: space-between; padding: 9px 10px; color: var(--text);
+}
+.key .sym { align-self: flex-end; font-size: 17px; }
+.key .name { font-size: 12px; color: #cfcfd8; }
+.key.letter { justify-content: center; align-items: center; font-size: 24px; }
+
+/* Visuel : rappels */
+.list { width: 100%; display: flex; flex-direction: column; gap: 8px; }
+.row { display: flex; justify-content: space-between; gap: 10px; align-items: center; padding: 10px 12px; border-radius: 10px; background: var(--surface-2); border: 1px solid var(--line); font-size: 13.5px; }
+.row .t { font-family: var(--mono); font-size: 12px; color: var(--accent); white-space: nowrap; }
+.row.faded { opacity: 0.45; }
+
+/* Visuel : calculs */
+.calc { width: 100%; font-family: var(--mono); display: flex; flex-direction: column; gap: 10px; }
+.calc div { display: flex; justify-content: space-between; gap: 10px; font-size: 13.5px; color: var(--muted); border-bottom: 1px dashed var(--line); padding-bottom: 9px; }
+.calc div:last-child { border-bottom: 0; }
+.calc b { color: var(--text); font-weight: 500; }
+
+/* Visuel : météo */
+.weather { text-align: center; }
+.weather .deg { font-size: 56px; font-weight: 600; letter-spacing: -0.04em; line-height: 1; }
+.weather .city { color: var(--muted); font-size: 14px; margin-top: 8px; }
+.weather .sub { font-family: var(--mono); font-size: 11.5px; color: var(--dim); margin-top: 14px; }
+
+/* Visuel : modèles */
+.brains { display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; }
+.brains > span { font-size: 14px; padding: 9px 15px; border-radius: 999px; border: 1px solid var(--line-strong); background: var(--surface-2); color: #dcdce4; }
+.brains > span.on { border-color: rgba(139, 123, 255, 0.5); background: rgba(139, 123, 255, 0.12); color: #fff; }
+.brains small { font-family: var(--mono); font-size: 11px; color: var(--dim); margin-left: 6px; }
+
+/* Installation */
+.steps { display: grid; grid-template-columns: repeat(3, 1fr); border-top: 1px solid var(--line); }
+.step { padding: 28px 28px 0 0; }
+.step + .step { padding-left: 28px; border-left: 1px solid var(--line); }
+.step .n { font-family: var(--mono); font-size: 12px; color: var(--accent); margin-bottom: 14px; }
+.step h3 { margin: 0 0 6px; font-size: 17px; font-weight: 600; }
+.step p { margin: 0; color: var(--muted); font-size: 14.5px; }
+
+/* Configuration */
+.spec { display: grid; grid-template-columns: 1fr 1fr; gap: 0 64px; margin: 0; }
+.spec div { display: grid; grid-template-columns: 150px 1fr; gap: 16px; padding: 18px 0; border-bottom: 1px solid var(--line); }
+.spec dt { font-family: var(--mono); font-size: 12.5px; color: var(--dim); padding-top: 2px; }
+.spec dd { margin: 0; font-size: 15px; }
+.spec .note { display: block; color: var(--muted); font-size: 13.5px; margin-top: 2px; }
+.spec a { text-decoration: underline; text-decoration-color: var(--line-strong); text-underline-offset: 3px; }
+
+/* Appel final */
+.final { text-align: center; padding: 160px 24px 150px; }
+.final img { width: 96px; margin: 0 auto 28px; filter: drop-shadow(0 14px 36px rgba(86, 70, 240, 0.4)); }
+.final h2 { margin-bottom: 30px; }
+
+footer { border-top: 1px solid var(--line); }
+footer .wrap { display: flex; justify-content: space-between; gap: 16px; flex-wrap: wrap; padding-top: 28px; padding-bottom: 40px; font-size: 13.5px; color: var(--dim); }
+footer a:hover { color: var(--text); }
+footer .fl { display: flex; gap: 20px; }
+
+@media (max-width: 900px) {
+  .links { display: none; }
+  .bento { grid-template-columns: 1fr 1fr; }
+  .span-2 { grid-column: span 1; } .span-4, .span-6 { grid-column: span 2; }
+  .spec { grid-template-columns: 1fr; }
+  .menu { right: 20px; }
+}
+@media (max-width: 640px) {
+  .wrap { padding: 0 16px; }
+  .hero { padding-top: 64px; }
+  section.wrap { margin-top: 96px; }
+  nav .wrap { gap: 14px; }
+  nav .btn > span { display: none; }
+  .bento { grid-template-columns: 1fr; }
+  .span-2, .span-4, .span-6 { grid-column: span 1; }
+  .desktop { height: 440px; }
+  .menu { display: none; }
+  .menubar .left span { display: none !important; }
+  .chat { left: 14px; right: 14px; width: auto; bottom: 104px; }
+  .msg { font-size: 13.5px; }
+  .orb { width: 76px; right: 18px; bottom: 18px; }
+  .flow { flex-direction: column; align-items: stretch; }
+  .arrow .line { display: none; }
+  .key { width: 62px; height: 62px; }
+  .steps { grid-template-columns: 1fr; }
+  .step, .step + .step { padding: 24px 0; border-left: 0; border-bottom: 1px solid var(--line); }
+  .spec div { grid-template-columns: 1fr; gap: 4px; }
 }
 </style>
 </head>
 <body>
-<div class="wrap">
-  <header>
+<nav>
+  <div class="wrap">
     <a class="brand" href="#"><img src="favicon.png" alt="">Benom</a>
+    <div class="links">
+      <a href="#fonctions"><span data-lang="fr">Fonctions</span><span data-lang="en">Features</span></a>
+      <a href="#installer"><span data-lang="fr">Installer</span><span data-lang="en">Install</span></a>
+      <a href="#configuration"><span data-lang="fr">Configuration</span><span data-lang="en">Requirements</span></a>
+      <a href="https://github.com/raucheacho/benom-releases/releases"><span data-lang="fr">Versions</span><span data-lang="en">Releases</span></a>
+    </div>
+    <div class="spacer"></div>
     <div class="lang" role="group" aria-label="Langue · Language">
       <button type="button" data-set="fr">FR</button>
       <button type="button" data-set="en">EN</button>
     </div>
-  </header>
+    <a class="btn" href="https://github.com/raucheacho/benom-releases/releases/latest/download/Benom.dmg" aria-label="Télécharger · Download">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 4v11m0 0-4.5-4.5M12 15l4.5-4.5M5 19.5h14"/></svg>
+      <span><span data-lang="fr">Télécharger</span><span data-lang="en">Download</span></span>
+    </a>
+  </div>
+</nav>
 
-  <main>
-    <div class="hero">
-      <img src="icon.png" alt="Benom">
-      <h1>Benom</h1>
-      <p class="tagline">
-        <span data-lang="fr">Un assistant vocal pour ton Mac. Tu lui parles, il te répond, en français ou en anglais. Ta voix reste sur ton Mac.</span>
-        <span data-lang="en">A voice assistant for your Mac. You talk, it answers, in English or French. Your voice stays on your Mac.</span>
-      </p>
-      <a class="cta" href="https://github.com/raucheacho/benom-releases/releases/latest/download/Benom.dmg">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 4v11m0 0-4.5-4.5M12 15l4.5-4.5M5 19.5h14"/></svg>
-        <span data-lang="fr">Télécharger pour Mac</span>
-        <span data-lang="en">Download for Mac</span>
-      </a>
-      <p class="meta">
-        <span data-lang="fr">Version <span class="version">1.0.0</span> · Mac Apple Silicon · macOS 14 ou plus récent · <a href="https://github.com/raucheacho/benom-releases/releases">Toutes les versions</a></span>
-        <span data-lang="en">Version <span class="version">1.0.0</span> · Apple Silicon Mac · macOS 14 or later · <a href="https://github.com/raucheacho/benom-releases/releases">All versions</a></span>
-      </p>
+<main>
+  <div class="hero wrap">
+    <p class="eyebrow"><span data-lang="fr">Assistant vocal pour Mac</span><span data-lang="en">Voice assistant for Mac</span></p>
+    <h1>
+      <span data-lang="fr">Parle à ton Mac.<br><span class="dim">Il te répond.</span></span>
+      <span data-lang="en">Talk to your Mac.<br><span class="dim">It talks back.</span></span>
+    </h1>
+    <p class="lede">
+      <span data-lang="fr">Benom t'écoute, comprend et répond à voix haute, en français ou en anglais. L'écoute et la voix tournent sur ton Mac.</span>
+      <span data-lang="en">Benom listens, understands and answers out loud, in English or French. Listening and speech run on your Mac.</span>
+    </p>
+    <a class="btn lg" href="https://github.com/raucheacho/benom-releases/releases/latest/download/Benom.dmg">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 4v11m0 0-4.5-4.5M12 15l4.5-4.5M5 19.5h14"/></svg>
+      <span data-lang="fr">Télécharger pour Mac</span><span data-lang="en">Download for Mac</span>
+    </a>
+    <p class="meta">v<span class="version">1.0.0</span> · Apple Silicon · macOS 14+</p>
+
+    <div class="stage" aria-hidden="true">
+      <div class="desktop">
+        <div class="menubar">
+          <div class="left"><b>Finder</b><span data-lang="fr">Fichier</span><span data-lang="en">File</span><span data-lang="fr">Édition</span><span data-lang="en">Edit</span><span data-lang="fr">Présentation</span><span data-lang="en">View</span></div>
+          <span class="mb-on"><img class="mb-icon" src="menubar.png" alt=""></span>
+          <span data-lang="fr">ven. 9:41</span><span data-lang="en">Fri 9:41 AM</span>
+        </div>
+        <div class="menu">
+          <div class="info"><span data-lang="fr">Connecté au cerveau</span><span data-lang="en">Connected to the brain</span></div>
+          <div><span data-lang="fr">Voix : Kokoro</span><span data-lang="en">Voice: Kokoro</span><kbd>›</kbd></div>
+          <div><span data-lang="fr">Agenda (2)</span><span data-lang="en">Agenda (2)</span><kbd>›</kbd></div>
+          <hr>
+          <div class="hl"><span data-lang="fr">Couper l'écoute</span><span data-lang="en">Stop listening</span><kbd>⌃⌥M</kbd></div>
+          <div><span data-lang="fr">Réglages…</span><span data-lang="en">Settings…</span><kbd>⌘,</kbd></div>
+          <div><span data-lang="fr">Rechercher les mises à jour…</span><span data-lang="en">Check for Updates…</span></div>
+          <hr>
+          <div><span data-lang="fr">Quitter Benom</span><span data-lang="en">Quit Benom</span><kbd>⌘Q</kbd></div>
+        </div>
+        <div class="chat">
+          <div class="msg you"><div class="who"><span data-lang="fr">toi</span><span data-lang="en">you</span></div>
+            <span data-lang="fr">Rappelle-moi tous les lundis à 9 h de faire le point sur la semaine.</span>
+            <span data-lang="en">Remind me every Monday at 9 to review the week.</span></div>
+          <div class="msg tali"><div class="who">tali</div>
+            <span data-lang="fr">C'est noté : tous les lundis à 9 heures, je te rappelle de faire le point sur la semaine.</span>
+            <span data-lang="en">Got it: every Monday at 9 AM, I'll remind you to review the week.</span></div>
+          <div class="listening"><span class="bars"><i></i><i></i><i></i><i></i><i></i></span><span data-lang="fr">Tali t'écoute…</span><span data-lang="en">Tali is listening…</span></div>
+        </div>
+        <img class="orb" src="orb.png" alt="">
+      </div>
+    </div>
+  </div>
+
+  <section id="fonctions" class="wrap">
+    <div class="head">
+      <h2>
+        <span data-lang="fr">Pas de mot magique.<span class="dim">Tu parles, Benom répond.</span></span>
+        <span data-lang="en">No wake word.<span class="dim">You speak, Benom answers.</span></span>
+      </h2>
     </div>
 
-    <section>
-      <h2><span data-lang="fr">Ce que fait Benom</span><span data-lang="en">What Benom does</span></h2>
-      <div class="grid">
-        <div class="card">
-          <div class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M12 3a3 3 0 0 0-3 3v6a3 3 0 0 0 6 0V6a3 3 0 0 0-3-3Z"/><path d="M19 11a7 7 0 0 1-14 0M12 18v3"/></svg></div>
-          <h3><span data-lang="fr">Une vraie conversation</span><span data-lang="en">A real conversation</span></h3>
-          <p><span data-lang="fr">Parle naturellement, coupe-lui la parole, enchaîne les questions. Pas de mot magique, pas de bouton à tenir.</span><span data-lang="en">Speak naturally, interrupt it, ask follow-ups. No wake word, no button to hold.</span></p>
+    <div class="bento">
+      <div class="card span-4">
+        <div class="visual">
+          <div class="flow">
+            <div class="box mac">
+              <div class="label"><span data-lang="fr">Sur ton Mac</span><span data-lang="en">On your Mac</span></div>
+              <div class="chips">
+                <span class="chip on"><span data-lang="fr">Micro</span><span data-lang="en">Microphone</span></span>
+                <span class="chip on"><span data-lang="fr">Écoute</span><span data-lang="en">Listening</span></span>
+                <span class="chip on"><span data-lang="fr">Voix</span><span data-lang="en">Speech</span></span>
+                <span class="chip"><span data-lang="fr">Rappels</span><span data-lang="en">Reminders</span></span>
+              </div>
+            </div>
+            <div class="arrow"><span data-lang="fr">texte seulement</span><span data-lang="en">text only</span><div class="line"></div></div>
+            <div class="box model">
+              <div class="label"><span data-lang="fr">Ton modèle</span><span data-lang="en">Your model</span></div>
+              <div class="chips"><span class="chip">Ollama</span><span class="chip"><span data-lang="fr">ou en ligne</span><span data-lang="en">or online</span></span></div>
+            </div>
+          </div>
         </div>
-        <div class="card">
-          <div class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="11" width="16" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg></div>
-          <h3><span data-lang="fr">Ta voix reste chez toi</span><span data-lang="en">Your voice stays home</span></h3>
-          <p><span data-lang="fr">L'écoute et la voix tournent sur ton Mac. Seul le texte part vers le modèle que tu choisis, local ou en ligne.</span><span data-lang="en">Listening and speech run on your Mac. Only text goes to the model you pick, local or online.</span></p>
-        </div>
-        <div class="card">
-          <div class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="13" r="8"/><path d="M12 9v4l2.5 2.5M9 2h6"/></svg></div>
-          <h3><span data-lang="fr">Rappels et agenda</span><span data-lang="en">Reminders and agenda</span></h3>
-          <p><span data-lang="fr">« Rappelle-moi tous les lundis à 9 h. » Benom te le dit au bon moment, ou attend ton retour si tu n'es pas là.</span><span data-lang="en">“Remind me every Monday at 9.” Benom tells you at the right time, or waits until you're back.</span></p>
-        </div>
-        <div class="card">
-          <div class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 18a5 5 0 1 1 .9-9.9A6 6 0 0 1 19 10a4 4 0 0 1-1 7.9H7Z"/></svg></div>
-          <h3><span data-lang="fr">Météo et recherche web</span><span data-lang="en">Weather and web search</span></h3>
-          <p><span data-lang="fr">La météo de ta ville ou d'ailleurs, et des réponses à jour depuis le web (avec une clé Tavily, gratuite).</span><span data-lang="en">Weather for your city or anywhere, and up-to-date answers from the web (with a free Tavily key).</span></p>
-        </div>
-        <div class="card">
-          <div class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5" y="3" width="14" height="18" rx="2"/><path d="M9 7h6M9 12h.01M12 12h.01M15 12h.01M9 16h.01M12 16h.01M15 16h.01"/></svg></div>
-          <h3><span data-lang="fr">Calculs et conversions</span><span data-lang="en">Math and conversions</span></h3>
-          <p><span data-lang="fr">Calculs, unités, devises au cours du jour : des résultats exacts, pas des approximations.</span><span data-lang="en">Math, units, currencies at today's rate: exact results, not guesses.</span></p>
-        </div>
-        <div class="card">
-          <div class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v3M12 18v3M4.2 7.5l2.6 1.5M17.2 15l2.6 1.5M4.2 16.5l2.6-1.5M17.2 9l2.6-1.5"/><circle cx="12" cy="12" r="3.5"/></svg></div>
-          <h3><span data-lang="fr">Le cerveau de ton choix</span><span data-lang="en">The brain you choose</span></h3>
-          <p><span data-lang="fr">Ollama sur ton Mac, ou un service en ligne comme Groq, OpenRouter, Mistral ou OpenAI.</span><span data-lang="en">Ollama on your Mac, or an online service like Groq, OpenRouter, Mistral or OpenAI.</span></p>
-        </div>
+        <h3><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="11" width="16" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg><span data-lang="fr">Ta voix reste chez toi</span><span data-lang="en">Your voice stays home</span></h3>
+        <p><span data-lang="fr">Le son ne quitte jamais ton Mac. Seul le texte de la conversation part vers le modèle que tu as choisi.</span><span data-lang="en">Audio never leaves your Mac. Only the conversation text goes to the model you picked.</span></p>
       </div>
-    </section>
 
-    <section>
-      <h2><span data-lang="fr">Installer en trois étapes</span><span data-lang="en">Install in three steps</span></h2>
-      <ol class="steps">
-        <li><strong><span data-lang="fr">Télécharge</span><span data-lang="en">Download</span></strong><span><span data-lang="fr">Ouvre le fichier Benom.dmg.</span><span data-lang="en">Open the Benom.dmg file.</span></span></li>
-        <li><strong><span data-lang="fr">Glisse</span><span data-lang="en">Drag</span></strong><span><span data-lang="fr">Dépose Benom dans le dossier Applications.</span><span data-lang="en">Drop Benom into your Applications folder.</span></span></li>
-        <li><strong><span data-lang="fr">Lance</span><span data-lang="en">Launch</span></strong><span><span data-lang="fr">L'assistant installe le reste et t'aide à choisir ton modèle. Les mises à jour te sont ensuite proposées automatiquement.</span><span data-lang="en">The setup assistant installs the rest and helps you pick a model. Updates are then offered automatically.</span></span></li>
-      </ol>
-    </section>
+      <div class="card span-2">
+        <div class="visual">
+          <div class="keys">
+            <div class="key"><span class="sym">⌃</span><span class="name">control</span></div>+
+            <div class="key"><span class="sym">⌥</span><span class="name">option</span></div>+
+            <div class="key letter">M</div>
+          </div>
+        </div>
+        <h3><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 2l20 20M9 9v3a3 3 0 0 0 5.1 2.1M15 9.3V6a3 3 0 0 0-5.9-.8M19 11a7 7 0 0 1-1.2 3.9M5 11a7 7 0 0 0 11.2 5.6M12 18v3"/></svg><span data-lang="fr">Coupe l'écoute</span><span data-lang="en">Mute in a keystroke</span></h3>
+        <p><span data-lang="fr">Un raccourci, et le micro se ferme vraiment. Benom reste là, prêt à reprendre.</span><span data-lang="en">One shortcut and the microphone really closes. Benom stays ready to resume.</span></p>
+      </div>
 
-    <section>
-      <h2><span data-lang="fr">Ce qu'il te faut</span><span data-lang="en">What you need</span></h2>
-      <dl class="reqs">
-        <div><dt><span data-lang="fr">Mac</span><span data-lang="en">Mac</span></dt><dd><span data-lang="fr">Puce Apple (M1 ou plus récent). Les Mac Intel ne sont pas pris en charge.</span><span data-lang="en">Apple chip (M1 or later). Intel Macs are not supported.</span></dd></div>
-        <div><dt>macOS</dt><dd><span data-lang="fr">14 Sonoma ou plus récent</span><span data-lang="en">14 Sonoma or later</span></dd></div>
-        <div><dt><span data-lang="fr">Espace disque</span><span data-lang="en">Disk space</span></dt><dd><span data-lang="fr">Environ 4 Go, téléchargés au premier lancement</span><span data-lang="en">About 4 GB, downloaded on first launch</span></dd></div>
-        <div><dt><span data-lang="fr">Modèle de langage</span><span data-lang="en">Language model</span></dt><dd><span data-lang="fr"><a href="https://ollama.com">Ollama</a> installé, ou une clé d'un service en ligne</span><span data-lang="en"><a href="https://ollama.com">Ollama</a> installed, or a key for an online service</span></dd></div>
-      </dl>
-    </section>
-  </main>
+      <div class="card span-2">
+        <div class="visual">
+          <div class="list">
+            <div class="row"><span data-lang="fr">Faire le point</span><span data-lang="en">Review the week</span><span class="t"><span data-lang="fr">lun. 9:00</span><span data-lang="en">Mon 9:00</span></span></div>
+            <div class="row"><span data-lang="fr">Appeler le garage</span><span data-lang="en">Call the garage</span><span class="t"><span data-lang="fr">mar. 14:30</span><span data-lang="en">Tue 2:30</span></span></div>
+            <div class="row faded"><span data-lang="fr">Sortir les poubelles</span><span data-lang="en">Take out the trash</span><span class="t"><span data-lang="fr">jeu. 20:00</span><span data-lang="en">Thu 8:00</span></span></div>
+          </div>
+        </div>
+        <h3><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="13" r="8"/><path d="M12 9v4l2.5 2.5M9 2h6"/></svg><span data-lang="fr">Rappels et agenda</span><span data-lang="en">Reminders and agenda</span></h3>
+        <p><span data-lang="fr">Benom te le dit au bon moment, ou attend ton retour si tu n'es pas devant ton Mac.</span><span data-lang="en">Benom tells you at the right time, or waits until you're back at your Mac.</span></p>
+      </div>
 
-  <footer>
+      <div class="card span-2">
+        <div class="visual">
+          <div class="calc">
+            <div><span>(12 + 30) × 4</span><b>168</b></div>
+            <div><span>5 mi</span><b><span data-lang="fr">8,05 km</span><span data-lang="en">8.05 km</span></b></div>
+            <div><span>72 °F</span><b><span data-lang="fr">22,2 °C</span><span data-lang="en">22.2 °C</span></b></div>
+          </div>
+        </div>
+        <h3><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5" y="3" width="14" height="18" rx="2"/><path d="M9 7h6M9 12h.01M12 12h.01M15 12h.01M9 16h.01M12 16h.01M15 16h.01"/></svg><span data-lang="fr">Calculs et conversions</span><span data-lang="en">Math and conversions</span></h3>
+        <p><span data-lang="fr">Calculs, unités, devises au cours du jour. Des résultats exacts, pas des approximations.</span><span data-lang="en">Math, units, currencies at today's rate. Exact results, not guesses.</span></p>
+      </div>
+
+      <div class="card span-2">
+        <div class="visual">
+          <div class="weather">
+            <div class="deg">18°</div>
+            <div class="city"><span data-lang="fr">Lyon · éclaircies</span><span data-lang="en">Lyon · sunny spells</span></div>
+            <div class="sub"><span data-lang="fr">demain 21° · pluie jeudi</span><span data-lang="en">tomorrow 21° · rain Thursday</span></div>
+          </div>
+        </div>
+        <h3><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 18a5 5 0 1 1 .9-9.9A6 6 0 0 1 19 10a4 4 0 0 1-1 7.9H7Z"/></svg><span data-lang="fr">Météo et recherche web</span><span data-lang="en">Weather and web search</span></h3>
+        <p><span data-lang="fr">La météo de ta ville ou d'ailleurs, et des réponses à jour depuis le web (avec une clé Tavily gratuite).</span><span data-lang="en">Weather anywhere, and up-to-date answers from the web (with a free Tavily key).</span></p>
+      </div>
+
+      <div class="card span-6">
+        <div class="visual" style="min-height: 110px">
+          <div class="brains">
+            <span class="on">Ollama <small><span data-lang="fr">sur ton Mac</span><span data-lang="en">on your Mac</span></small></span>
+            <span>Groq</span><span>OpenRouter</span><span>Mistral</span><span>OpenAI</span><span>LM Studio</span>
+          </div>
+        </div>
+        <h3><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v3M12 18v3M4.2 7.5l2.6 1.5M17.2 15l2.6 1.5M4.2 16.5l2.6-1.5M17.2 9l2.6-1.5"/><circle cx="12" cy="12" r="3.5"/></svg><span data-lang="fr">Le cerveau de ton choix</span><span data-lang="en">The brain you choose</span></h3>
+        <p><span data-lang="fr">Un modèle local avec Ollama, ou un service en ligne compatible. L'assistant de premier lancement t'aide à choisir.</span><span data-lang="en">A local model with Ollama, or a compatible online service. The setup assistant helps you choose.</span></p>
+      </div>
+    </div>
+  </section>
+
+  <section id="installer" class="wrap">
+    <div class="head">
+      <h2>
+        <span data-lang="fr">Prêt en quelques minutes.<span class="dim">Sans terminal, sans réglage.</span></span>
+        <span data-lang="en">Ready in minutes.<span class="dim">No terminal, no tinkering.</span></span>
+      </h2>
+    </div>
+    <div class="steps">
+      <div class="step"><div class="n">01</div><h3><span data-lang="fr">Télécharge</span><span data-lang="en">Download</span></h3><p><span data-lang="fr">Ouvre le fichier Benom.dmg.</span><span data-lang="en">Open the Benom.dmg file.</span></p></div>
+      <div class="step"><div class="n">02</div><h3><span data-lang="fr">Glisse</span><span data-lang="en">Drag</span></h3><p><span data-lang="fr">Dépose Benom dans le dossier Applications.</span><span data-lang="en">Drop Benom into your Applications folder.</span></p></div>
+      <div class="step"><div class="n">03</div><h3><span data-lang="fr">Lance</span><span data-lang="en">Launch</span></h3><p><span data-lang="fr">L'assistant installe le reste et t'aide à choisir ton modèle. Les mises à jour te sont ensuite proposées automatiquement.</span><span data-lang="en">The setup assistant installs the rest and helps you pick a model. Updates are then offered automatically.</span></p></div>
+    </div>
+  </section>
+
+  <section id="configuration" class="wrap">
+    <div class="head">
+      <h2>
+        <span data-lang="fr">Configuration requise.<span class="dim">Ce qu'il faut à ton Mac.</span></span>
+        <span data-lang="en">Requirements.<span class="dim">What your Mac needs.</span></span>
+      </h2>
+    </div>
+    <dl class="spec">
+      <div><dt>Mac</dt><dd><span data-lang="fr">Puce Apple, M1 ou plus récent</span><span data-lang="en">Apple chip, M1 or later</span><span class="note"><span data-lang="fr">Les Mac Intel ne sont pas pris en charge.</span><span data-lang="en">Intel Macs are not supported.</span></span></dd></div>
+      <div><dt>macOS</dt><dd><span data-lang="fr">14 Sonoma ou plus récent</span><span data-lang="en">14 Sonoma or later</span></dd></div>
+      <div><dt><span data-lang="fr">Espace disque</span><span data-lang="en">Disk space</span></dt><dd><span data-lang="fr">Environ 4 Go</span><span data-lang="en">About 4 GB</span><span class="note"><span data-lang="fr">Téléchargés au premier lancement.</span><span data-lang="en">Downloaded on first launch.</span></span></dd></div>
+      <div><dt><span data-lang="fr">Modèle</span><span data-lang="en">Model</span></dt><dd><a href="https://ollama.com">Ollama</a><span data-lang="fr">, ou une clé d'un service en ligne</span><span data-lang="en">, or a key for an online service</span></dd></div>
+      <div><dt><span data-lang="fr">Langues</span><span data-lang="en">Languages</span></dt><dd><span data-lang="fr">Français et anglais</span><span data-lang="en">English and French</span></dd></div>
+      <div><dt><span data-lang="fr">Mises à jour</span><span data-lang="en">Updates</span></dt><dd><span data-lang="fr">Automatiques, signées et vérifiées</span><span data-lang="en">Automatic, signed and verified</span></dd></div>
+    </dl>
+  </section>
+
+  <div class="final">
+    <img src="orb.png" alt="">
+    <h2>
+      <span data-lang="fr">Prêt à lui parler ?<span class="dim">C'est gratuit.</span></span>
+      <span data-lang="en">Ready to talk?<span class="dim">It's free.</span></span>
+    </h2>
+    <a class="btn lg" href="https://github.com/raucheacho/benom-releases/releases/latest/download/Benom.dmg">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 4v11m0 0-4.5-4.5M12 15l4.5-4.5M5 19.5h14"/></svg>
+      <span data-lang="fr">Télécharger pour Mac</span><span data-lang="en">Download for Mac</span>
+    </a>
+  </div>
+</main>
+
+<footer>
+  <div class="wrap">
     <span>© 2026 Rauche Acho</span>
-    <span><a href="https://github.com/raucheacho/benom-releases/releases"><span data-lang="fr">Notes de version</span><span data-lang="en">Release notes</span></a></span>
-  </footer>
-</div>
+    <span class="fl">
+      <a href="https://github.com/raucheacho/benom-releases/releases"><span data-lang="fr">Notes de version</span><span data-lang="en">Release notes</span></a>
+      <a href="https://github.com/raucheacho/benom-releases/releases/latest/download/Benom.dmg"><span data-lang="fr">Télécharger</span><span data-lang="en">Download</span></a>
+    </span>
+  </div>
+</footer>
+
 <script>
 (function () {
   var root = document.documentElement;
@@ -215,7 +464,10 @@ html[lang="fr"] [data-lang="fr"], html[lang="en"] [data-lang="en"] { display: re
   var saved = null;
   try { saved = localStorage.getItem("lang"); } catch (e) {}
   set(saved || ((navigator.language || "en").toLowerCase().indexOf("fr") === 0 ? "fr" : "en"));
-  // La dernière version publiée (sans elle, la version écrite dans la page).
+  document.querySelectorAll(".lang button").forEach(function (b) {
+    b.addEventListener("click", function () { set(b.dataset.set); });
+  });
+  // La dernière version publiée (sans elle, celle écrite dans la page).
   fetch("https://api.github.com/repos/raucheacho/benom-releases/releases/latest")
     .then(function (r) { return r.ok ? r.json() : null; })
     .then(function (rel) {
@@ -223,9 +475,6 @@ html[lang="fr"] [data-lang="fr"], html[lang="en"] [data-lang="en"] { display: re
       document.querySelectorAll(".version").forEach(function (e) { e.textContent = rel.tag_name.replace(/^v/, ""); });
     })
     .catch(function () {});
-  document.querySelectorAll(".lang button").forEach(function (b) {
-    b.addEventListener("click", function () { set(b.dataset.set); });
-  });
 })();
 </script>
 </body>
